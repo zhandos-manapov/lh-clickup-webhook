@@ -1,0 +1,58 @@
+{
+    "teams": [
+        {
+            "id": "9007120743",
+            "name": "Zhandos's Workspace",
+            "color": "#40BC86",
+            "avatar": null,
+            "members": []
+        }
+    ],
+    "spaces": [
+        {
+            "id": "90070271261",
+            "name": "Space",
+            "color": null,
+            "private": false,
+            "avatar": null,
+            "admin_can_manage": null,
+            "statuses": [],
+            "multiple_assignees": false,
+            "features": {},
+            "archived": false
+        }
+    ],
+    "folders": [
+        {
+            "id": "90070828896",
+            "name": "Folder1",
+            "orderindex": 1,
+            "override_statuses": false,
+            "hidden": false,
+            "space": {},
+            "task_count": "2",
+            "archived": false,
+            "statuses": [],
+            "lists": [],
+            "permission_level": "create"
+        }
+    ],
+    "lists": [
+        {
+            "id": "900701447215",
+            "name": "List",
+            "orderindex": 0,
+            "status": null,
+            "priority": null,
+            "assignee": null,
+            "task_count": 2,
+            "due_date": null,
+            "start_date": null,
+            "folder": {},
+            "space": {},
+            "archived": false,
+            "override_statuses": null,
+            "permission_level": "create"
+        }
+    ]
+}

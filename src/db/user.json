@@ -1,0 +1,17 @@
+{
+    "zhandos@gmail.com": {
+        "email": "zhandos@gmail.com",
+        "salt": "76c2dea2f123e9aca1a0e990e12a4f0ebdc4838150f9f9f21094599f3c123f92",
+        "hash": "4608ad753fee3d1f55d1954e40050bb2d381f5e8e0ce6695625e632c14c383667456ad8fbe088cd0867210f1684c6d6f139497c44522c6d9c7c73b763c09bf8a"
+    },
+    "john@gmail.com": {
+        "email": "john@gmail.com",
+        "salt": "719914658d5c5e0f0d3e2a9cafc468a7872eb20140af4b17a34cc2c382eabe18",
+        "hash": "1c572f4514f2c45f67ad2b3ec0fc50f4c9857ccd663c3441e36b7f241924d91a9c96add0207d19922e0a9ab759cab46cf796c881cbfaf3a2bb7f76085f166cc2"
+    },
+    "john2@gmail.com": {
+        "email": "john2@gmail.com",
+        "salt": "a6fcf27fad1bbe0a28a5ece90ff2d5bd32b21a3d65035ed4c0ea020e29fa09d5",
+        "hash": "8ec9951ff4555dfa98e0179028b4397708c22a82b3cc4ccbf0f4b7e2938f3714c47035958a0853d922be6d54885f160ece3c6f184317af63200633da7ca6739e"
+    }
+}

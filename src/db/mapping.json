@@ -1,0 +1,28 @@
+{
+    "list_id": "900701447215",
+    "default_fields": {
+        "name": {
+            "value": [
+                "full_name"
+            ],
+            "overwrite": false
+        },
+        "description": {
+            "value": [
+                "summary"
+            ],
+            "overwrite": true
+        }
+    },
+    "custom_fields": [
+        {
+            "id": "c5c4ecd5-97e6-48a8-92b9-d750e6f5c75e",
+            "name": "Email",
+            "value": [
+                "email",
+                "third_party_email_1"
+            ],
+            "overwrite": true
+        }
+    ]
+}
