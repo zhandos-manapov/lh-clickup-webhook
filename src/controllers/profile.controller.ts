@@ -1,5 +1,4 @@
 import fs from 'fs/promises'
-import axios from 'axios'
 import { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import { IMapping } from '../interfaces/IMapping'
