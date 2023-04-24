@@ -1,6 +1,6 @@
 import express from 'express'
-import { getFolders } from '../controllers/folder'
-import { getFolderlessLists } from '../controllers/list'
+import { getFolders } from '../controllers/folder.controller'
+import { getFolderlessLists } from '../controllers/list.controller'
 
 const router = express.Router()
 

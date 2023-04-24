@@ -1,5 +1,5 @@
 import express from 'express'
-import { getProfileFields, getProfiles } from '../controllers/profile'
+import { getProfileFields, getProfiles } from '../controllers/profile.controller'
 
 const router = express.Router()
 

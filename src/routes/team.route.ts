@@ -1,6 +1,6 @@
 import express from 'express'
-import { getTeams } from '../controllers/team'
-import { getSpaces } from '../controllers/space'
+import { getTeams } from '../controllers/team.controller'
+import { getSpaces } from '../controllers/space.controller'
 
 const router = express.Router()
 

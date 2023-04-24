@@ -2,10 +2,9 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError } from "../errors";
+import * as clickupService from '../services/clickup.service'
 
 const getFolders = async (req: Request, res: Response) => {
-    const { access_token: token } = await import('../db/token.json')
-
     const { space_id } = req.params
     if (!space_id) throw new BadRequestError('Please provide space_id')
 
@@ -14,13 +13,7 @@ const getFolders = async (req: Request, res: Response) => {
         archived = 'false'
     }
 
-    const endpoint = `${process.env.CLICKUP_API}/space/${space_id}/folder`
-    const response = await axios.get(endpoint, {
-        params: { archived },
-        headers: { 'Authorization': token }
-    })
-    const { data } = response
-
+    const { data } = await clickupService.getFolders(space_id, { archived })
     res.status(StatusCodes.OK).json(data)
 }
 

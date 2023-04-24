@@ -6,6 +6,7 @@ import { IMapping } from '../interfaces/IMapping'
 import { BadRequestError } from '../errors'
 import { IClickUpTaskResponse } from '../interfaces/clickup/IClickUpTaskResponse'
 import { IProfile } from '../interfaces/IProfile'
+import * as clickupService from '../services/clickup.service'
 
 // For testing
 // const receiveProfile = async (req: Request, res: Response) => {
@@ -19,8 +20,6 @@ import { IProfile } from '../interfaces/IProfile'
 const getProfileFields = async (req: Request, res: Response) => {
     const { list_id } = req.params
     if (!list_id) throw new BadRequestError('Please provide list_id')
-
-    const { access_token: token } = await import('../db/token.json')
 
     const default_fields = [
         {
@@ -40,14 +39,7 @@ const getProfileFields = async (req: Request, res: Response) => {
         }
     ]
 
-    const endpoint = `${process.env.CLICKUP_API}/list/${list_id}/field`
-    const response = await axios.get(endpoint, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-    })
-    const { data } = response
+    const { data } = await clickupService.getCustomFields(list_id)
     const custom_fields = data.fields
 
     res.status(StatusCodes.OK).json({ default_fields, custom_fields })
@@ -58,16 +50,7 @@ const getProfiles = async (req: Request, res: Response) => {
     const { list_id } = req.params
     if (!list_id) throw new BadRequestError('Please provide list_id')
 
-    const { access_token: token } = await import('../db/token.json')
-
-    const endpoint = `${process.env.CLICKUP_API}/list/${list_id}/task`
-    const response = await axios.get(endpoint, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-    })
-    const { data: profiles }: { data: { tasks: IClickUpTaskResponse[] } } = response
+    const { data: profiles }: { data: { tasks: IClickUpTaskResponse[] } } = await clickupService.getTasks(list_id)
 
     // Filter redundant fields
     const profiles_filtered = profiles.tasks.map(profile => ({
@@ -87,14 +70,7 @@ const getProfile = async (req: Request, res: Response) => {
     const { task_id } = req.params
     if (!task_id) throw new BadRequestError('Please provide task_id')
 
-    const { access_token: token } = await import('../db/token.json')
-
-    const endpoint = `${process.env.CLICKUP_API}/task/${task_id}`
-    const { data: profile }: { data: IClickUpTaskResponse } = await axios.get(endpoint, {
-        headers: {
-            'Authorization': token
-        }
-    })
+    const { data: profile }: { data: IClickUpTaskResponse } = await clickupService.getTask(task_id)
 
     // Filter redundant fields
     res.status(StatusCodes.OK).json({
@@ -116,20 +92,13 @@ const updateProfile = async (req: Request, res: Response) => {
     const { task_id } = req.params
     if (!task_id) throw new BadRequestError('Please provide task_id')
 
-    const { access_token: token } = await import('../db/token.json')
-
     // Get mapping from DB
     const mapping: IMapping = await import('../db/mapping.json')
 
     const profile: IProfile = req.body
 
     // Get profile from clickup api
-    const endpoint = `${process.env.CLICKUP_API}/task/${task_id}`
-    const { data: current_profile }: { data: IClickUpTaskResponse } = await axios.get(endpoint, {
-        headers: {
-            'Authorization': token
-        }
-    })
+    const { data: current_profile }: { data: IClickUpTaskResponse } = await clickupService.getTask(task_id)
 
     const payload_profile: { [key: string]: any } = {}
     if (profile.name) {
@@ -153,12 +122,7 @@ const updateProfile = async (req: Request, res: Response) => {
     }
 
     // Put to ClickUp API
-    const { data: updated_profile }: { data: IClickUpTaskResponse } = await axios.put(endpoint, payload_profile, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-    })
+    const { data: updated_profile }: { data: IClickUpTaskResponse } = await clickupService.updateTask(task_id, payload_profile)
 
     // Update custom fields 
     if (Array.isArray(profile.custom_fields)) {
@@ -173,24 +137,14 @@ const updateProfile = async (req: Request, res: Response) => {
             const current_field = updated_profile.custom_fields[field_idx]
             const endpoint = `${process.env.CLICKUP_API}/task/${task_id}/field/${current_field.id}`
             if (field_id_map.has(current_field.id)) {
-                const new_value = field_id_map.get(current_field.id)
+                const new_value = field_id_map.get(current_field.id)!
                 if (mapping.custom_fields.find(field => field.id == current_field.id)?.overwrite) {
-                    await axios.post(endpoint, { value: new_value }, {
-                        headers: {
-                            'Authorization': token,
-                            'Content-Type': 'application/json'
-                        }
-                    })
+                    await clickupService.setCustomField(task_id, current_field.id, new_value)
                     current_field.value = new_value
                 } else {
                     const target_field = current_profile.custom_fields.find(field => field.id == current_field.id)
                     if (!target_field?.value) {
-                        await axios.post(endpoint, { value: new_value }, {
-                            headers: {
-                                'Authorization': token,
-                                'Content-Type': 'application/json'
-                            }
-                        })
+                        await clickupService.setCustomField(task_id, current_field.id, new_value)
                     }
                 }
             }
@@ -239,16 +193,7 @@ const createProfile = async (req: Request, res: Response) => {
 
     clickup_profile.custom_fields = custom_fields
 
-    // Get token from DB
-    const { access_token: token } = await import('../db/token.json')
-
-    const endpoint = `${process.env.CLICKUP_API}/list/${mapping.list_id}/task`
-    const { data: profile }: { data: IClickUpTaskResponse } = await axios.post(endpoint, clickup_profile, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-    })
+    const { data: profile }: { data: IClickUpTaskResponse } = await clickupService.createTask(mapping.list_id, clickup_profile)
 
     // Write id mapping to DB
     const { default: ids } = await import('../db/id.json')

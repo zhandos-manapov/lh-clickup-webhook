@@ -5,16 +5,16 @@ import cors from 'cors'
 import errorHandler from './middleware/error-handler'
 
 // Routes
-import authRouter from './routes/auth'
-import teamRouter from './routes/team'
-import spaceRouter from './routes/space'
-import folderRouter from './routes/folder'
-import webhookRouter from './routes/webhook'
-import listRouter from './routes/list'
-import taskRouter from './routes/task'
+import authRouter from './routes/auth.route'
+import teamRouter from './routes/team.route'
+import spaceRouter from './routes/space.route'
+import folderRouter from './routes/folder.route'
+import webhookRouter from './routes/webhook.route'
+import listRouter from './routes/list.route'
+import taskRouter from './routes/task.route'
 
 // Handlers
-import { createProfileFieldMapping } from './controllers/profile'
+import { createProfileFieldMapping } from './controllers/profile.controller'
 import authorize from './middleware/authorize'
 
 dotenv.config()

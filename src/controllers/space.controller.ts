@@ -2,10 +2,9 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError } from "../errors";
+import * as clickupService from '../services/clickup.service'
 
 const getSpaces = async (req: Request, res: Response) => {
-    const { access_token: token } = await import('../db/token.json')
-
     const { team_id } = req.params
     if (!team_id) throw new BadRequestError('Please provide team_id')
 
@@ -14,13 +13,7 @@ const getSpaces = async (req: Request, res: Response) => {
         archived = 'false'
     }
 
-    const endpoint = `${process.env.CLICKUP_API}/team/${team_id}/space`
-    const response = await axios.get(endpoint, {
-        params: { archived },
-        headers: { 'Authorization': token }
-    })
-    const { data } = response
-
+    const { data } = await clickupService.getSpaces(team_id, { archived })
     res.status(StatusCodes.OK).json(data)
 }
 
